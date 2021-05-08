@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     {
         id: 1,
@@ -34,6 +36,12 @@ app.delete('/api/persons/:id', (request, response) => {
         response.status(204).end()
     }
     else response.status(404).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const newPerson = {...request.body, id: Math.round(Math.random()*100000)}
+    persons = persons.concat(newPerson)
+    response.json(newPerson)
 })
 
 app.get('/info', (request, response) => {
