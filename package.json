@@ -1,0 +1,19 @@
+{
+  "name": "fullstack2021part3",
+  "version": "1.0.0",
+  "description": "Part 3 of fullstackOpen 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krzysztofdymicki/Full-Stack-Open-2021-part3-.git"
+  },
+  "author": "Krzysztof Dymicki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krzysztofdymicki/Full-Stack-Open-2021-part3-/issues"
+  },
+  "homepage": "https://github.com/krzysztofdymicki/Full-Stack-Open-2021-part3-#readme"
+}
