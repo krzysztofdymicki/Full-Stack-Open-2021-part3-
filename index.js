@@ -26,6 +26,16 @@ app.get('/api/persons/:id', (request, response) => {
            : response.status(404).end()
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(p => p.id === id)
+    if (person) {
+        persons = persons.filter(p => p.id !== id)
+        response.status(204).end()
+    }
+    else response.status(404).end()
+})
+
 app.get('/info', (request, response) => {
     response.send(`<html>
     <head>
