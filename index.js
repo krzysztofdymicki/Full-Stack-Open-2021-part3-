@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
+const Person = require('./models/Person')
 const morgan = require('morgan')
 const cors = require('cors')
 app.use(cors())
@@ -33,16 +35,29 @@ let persons = [
 
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person
+          .find({})
+          .then(persons => {
+              console.log('persons finded by Mongo',persons )
+              console.log("type of id", typeof persons[0]._id)
+              response.json(persons)
+          })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-    person ? response.json(person)
-           : response.status(404).end()
+    const id = request.params.id
+    Person
+          .findById(id)
+          .then(person => {
+            person ? response.json(person)
+                   : response.status(404).end()
+          })
+          .catch(error => {
+              console.log(error)
+          })
+   
 })
-
+/*
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const person = persons.find(p => p.id === id)
@@ -75,9 +90,9 @@ app.get('/info', (request, response) => {
         <h3>${new Date()}</h3>
     </body>
 </html>`)
-})
+})*/
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () =>
     console.log(`Server running on PORT ${PORT}`)
 )
