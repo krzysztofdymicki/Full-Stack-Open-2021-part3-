@@ -20,19 +20,6 @@ app.use(morgan((tokens, req, res) => {
   )
 app.use(express.static('build'))
 
-let persons = [
-    {
-        id: 1,
-        name: 'Krzysztof',
-        number: 123456
-    },
-    {
-        id: 2,
-        name: 'Albert',
-        number: 1234567
-    }
-]
-
 
 app.get('/api/persons', (request, response) => {
     Person
@@ -57,6 +44,29 @@ app.get('/api/persons/:id', (request, response) => {
           })
    
 })
+
+app.post('/api/persons', (request, response) => {
+    const { name, number } = request.body
+
+    /*if(persons.find(p => p.name === name || p.number === number)) {
+        return response.status(400).json({
+            error: 'number or name already exists in the database'
+        })
+    }*/
+
+    const newPerson = new Person({
+        name: name,
+        number: number
+    })
+
+    newPerson
+             .save()
+             .then(savedPerson => {
+                 response.json(savedPerson)
+             })
+
+})
+
 /*
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -66,18 +76,6 @@ app.delete('/api/persons/:id', (request, response) => {
         response.status(204).end()
     }
     else response.status(404).end()
-})
-
-app.post('/api/persons', (request, response) => {
-    const { name, number } = request.body
-    if(persons.find(p => p.name === name || p.number === number)) {
-        return response.status(400).json({
-            error: 'number or name already exists in the database'
-        })
-    }
-    const newPerson = {...request.body, id: Math.round(Math.random()*100000)}
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
 })
 
 app.get('/info', (request, response) => {
