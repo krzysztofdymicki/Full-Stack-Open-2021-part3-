@@ -45,12 +45,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body
 
-    /*if(persons.find(p => p.name === name || p.number === number)) {
-        return response.status(400).json({
-            error: 'number or name already exists in the database'
-        })
-    }*/
-
     const newPerson = new Person({
         name,
         number
@@ -92,7 +86,11 @@ app.put('/api/persons/:id', (request,response, next) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<html>
+
+    Person
+          .find({})
+          .then(persons => {
+            response.send(`<html>
     <head>
         <title>Info</title>
     </head>
@@ -101,6 +99,7 @@ app.get('/info', (request, response) => {
         <h3>${new Date()}</h3>
     </body>
 </html>`)
+          })
 })
 
 const unknownEndpoint = (request, response) => {
