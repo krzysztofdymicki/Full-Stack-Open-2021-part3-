@@ -25,8 +25,6 @@ app.get('/api/persons', (request, response, next) => {
     Person
           .find({})
           .then(persons => {
-              console.log('persons finded by Mongo',persons )
-              console.log("type of id", typeof persons[0]._id)
               response.json(persons)
           })
           .catch(error => next(error))
@@ -54,8 +52,8 @@ app.post('/api/persons', (request, response, next) => {
     }*/
 
     const newPerson = new Person({
-        name: name,
-        number: number
+        name,
+        number
     })
 
     newPerson
@@ -77,7 +75,14 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error))
 })
 
-/*
+app.put('/api/persons/:id', (request,response) => {
+    const {name, number} = request.body
+
+    const personToUpdate = {
+        name,
+        number
+    }
+})
 
 app.get('/info', (request, response) => {
     response.send(`<html>
@@ -89,7 +94,29 @@ app.get('/info', (request, response) => {
         <h3>${new Date()}</h3>
     </body>
 </html>`)
-})*/
+})
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({
+        error: 'unknown endpoint'
+    })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if(error.name === 'CastError') {
+        return response.status(400).send({
+            error: 'malformatted id'
+        })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () =>
