@@ -76,9 +76,9 @@ app.put('/api/persons/:id', (request,response, next) => {
         name,
         number
     }
-
+    console.log('personToUpdate', personToUpdate)
     Person
-          .findByIdAndUpdate(id, personToUpdate, { new: true })
+          .findByIdAndUpdate(id, personToUpdate, { new:true, runValidators: true, context:'query' } )
           .then(updatedPerson => {
               response.json(updatedPerson)
           })
@@ -119,7 +119,8 @@ const errorHandler = (error, request, response, next) => {
         })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({
-            error: error.message
+            error: error.message,
+            name: error.name
         })
     }
 

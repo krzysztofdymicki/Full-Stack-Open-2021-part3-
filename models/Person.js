@@ -16,11 +16,18 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 const personSchema = new mongoose.Schema({
     name: {
        type: String,
-       unique: true 
+       unique: true,
+       minlength: 3
     },
     number: {
         type: Number,
-        unique: true
+        unique: true,
+        validate: {
+            validator: (v) => {
+                return v.toString().length > 7
+            },
+            message: props => `${props.value} should be at least 8 characters long`
+        }
     }
 })
 
