@@ -21,7 +21,7 @@ app.use(morgan((tokens, req, res) => {
 app.use(express.static('build'))
 
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     Person
           .find({})
           .then(persons => {
@@ -29,9 +29,10 @@ app.get('/api/persons', (request, response) => {
               console.log("type of id", typeof persons[0]._id)
               response.json(persons)
           })
+          .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     Person
           .findById(id)
@@ -39,13 +40,11 @@ app.get('/api/persons/:id', (request, response) => {
             person ? response.json(person)
                    : response.status(404).end()
           })
-          .catch(error => {
-              console.log(error)
-          })
+          .catch(error => next(error))
    
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body
 
     /*if(persons.find(p => p.name === name || p.number === number)) {
@@ -64,19 +63,21 @@ app.post('/api/persons', (request, response) => {
              .then(savedPerson => {
                  response.json(savedPerson)
              })
+             .catch(error => next(error))
 
+})
+
+
+app.delete('/api/persons/:id', (request, response) => {
+    Person
+    .findByIdAndDelete(request.params.id)
+    .then(result => {
+        response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 /*
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-    if (person) {
-        persons = persons.filter(p => p.id !== id)
-        response.status(204).end()
-    }
-    else response.status(404).end()
-})
 
 app.get('/info', (request, response) => {
     response.send(`<html>
